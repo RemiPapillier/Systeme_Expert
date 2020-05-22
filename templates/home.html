@@ -19,21 +19,9 @@
             <input id="inputeq" placeholder="1" class="form-control" style="text-align: center; width: 60%; margin: auto;" type="number" min="1" max="10">
         </div>
     </div>
-    <br><br><br>
+    <br><br>
     <div class="container equations">
         <div class="row">
-            <!--<div class="col">
-                <label for="premisse">Premisse</label>
-                <div class="input-group">
-                    <input id="premisse" type="text" class="form-control premisse" placeholder="A^B^C">
-                </div>
-            </div>
-            <div class="col">
-                <label for="conclusion">Conclusion</label>
-                <div class="input-group">
-                    <input id="conclusion" type="text" class="form-control conclusion" placeholder="D">
-                </div>
-            </div>-->
             <div class="input-group equation" style="margin: 3px;">
                 <div class="input-group-prepend">
                   <span class="input-group-text">Equation</span>
@@ -44,7 +32,7 @@
         </div>
     </div>
     <div class="container">
-        <br><br>
+        <br>
         <div class="row">
             <div class="col">
                 <label for="hypothese">Hypothèses</label>
@@ -59,12 +47,10 @@
                 </div>
             </div>
         </div>
-        <br><br>
+        <br>
         <div class="row">
             <div class="col">
                 <button id="launch" onclick="resolve()" type="button" class="btn btn-secondary">Start</button>
-            </div>
-            <div class="col">
                 <button id="reset" onclick="reset()" type="button" class="btn btn-secondary">Reset</button>
             </div>
         </div>
@@ -124,6 +110,7 @@
             }
             $.ajax({
                 type: "POST",
+                async: false,
                 data: myDic,
                 url: '/create_eq'
             })
@@ -134,11 +121,13 @@
         }
         $.ajax({
             type: "POST",
+            async: false,
             data: hypDic,
             url: '/create_hyp'
         })
         $.ajax({
             type: "POST",
+            async: false,
             url: '/generate_solutions',
             success: function (res) {
                 $('#solution').val(res)
@@ -155,6 +144,7 @@
 
         $.ajax({
             type: "POST",
+            async: false,
             url: '/reset',
         })
     }
