@@ -1,5 +1,5 @@
 #Un certain nombre d'équations
-from Equation import Equation
+from .equation import *
 
 class Systeme:
 

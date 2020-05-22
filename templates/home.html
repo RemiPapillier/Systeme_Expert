@@ -13,40 +13,60 @@
 </head>
 
 <body>
-    <div class="container">
-        <br><br><br><br>
-        <form class="form-inline">
-            <div class="form-group">
-                <label class="sr-only" for="emailInput">Email address</label>
-                <input type="email" class="form-control" id="emailInput" placeholder="Email">
+    <br><br>
+    <div class="row">
+        <div class="col">
+            <input id="inputeq" placeholder="1" class="form-control" style="text-align: center; width: 60%; margin: auto;" type="number" min="1" max="10">
+        </div>
+    </div>
+    <br><br><br>
+    <div class="container equations">
+        <div class="row">
+            <!--<div class="col">
+                <label for="premisse">Premisse</label>
+                <div class="input-group">
+                    <input id="premisse" type="text" class="form-control premisse" placeholder="A^B^C">
+                </div>
             </div>
-            <div class="form-group">
-                <label class="sr-only" for="nameInput">Name</label>
-                <input type="text" class="form-control" id="nameInput" placeholder="First Name">
+            <div class="col">
+                <label for="conclusion">Conclusion</label>
+                <div class="input-group">
+                    <input id="conclusion" type="text" class="form-control conclusion" placeholder="D">
+                </div>
+            </div>-->
+            <div class="input-group equation" style="margin: 3px;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Equation</span>
+                </div>
+                <input id="premisse" type="text" aria-label="premisse" class="form-control premisse" placeholder="Prémisse">
+                <input id="conclusion" type="text" aria-label="conclusion" class="form-control conclusion" placeholder="Conclusion">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-        <br>
-        <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
-        <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+        </div>
     </div>
     <div class="container">
+        <br><br>
         <div class="row">
-            <h2>Equation</h2>
             <div class="col">
+                <label for="hypothese">Hypothèses</label>
                 <div class="input-group">
-                    <input id="premisse" type="text" class="form-control" placeholder="A^B^C">
+                    <input id="hypothese" type="text" class="form-control hypothese" placeholder="A,B,C">
                 </div>
             </div>
-            <div class="col-1">
-                <h2>=></h2>
-            </div>
             <div class="col">
+                <label for="solution">Solutions</label>
                 <div class="input-group">
-                    <input id="conclusion" type="text" class="form-control" placeholder="D">
+                    <input id="solution" type="text" class="form-control">
                 </div>
             </div>
-
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col">
+                <button id="launch" onclick="resolve()" type="button" class="btn btn-secondary">Start</button>
+            </div>
+            <div class="col">
+                <button id="reset" onclick="reset()" type="button" class="btn btn-secondary">Reset</button>
+            </div>
         </div>
     </div>
 
@@ -61,41 +81,84 @@
 </html>
 
 <script>
+
     $(document).ready(function () {
+        $('#solution').attr('disabled', 'disabled');
+        $('#reset').attr('disabled', 'disabled');
 
-
-
-
-        $('form').on('submit', function (event) {
-
-            $.ajax({
-                data: {
-                    name: $('#nameInput').val(),
-                    email: $('#emailInput').val()
-                },
-                type: 'POST',
-                url: '/process',
-                success: function (data) {
-                    if (data.error) {
-                        $('#errorAlert').text(data.error).show();
-                        $('#successAlert').hide();
+        $('#inputeq').change(function () {
+            var form = document.getElementById("inputeq");
+            var entry = this.value;
+            var count = 0;
+            $('.equation').each(function () {
+                count += 1;
+            })
+            diff = count - entry;
+            if (form.checkValidity()) {
+                if (diff < 0) {
+                    for (var i = 0; i < (Math.abs(diff)); i++) {
+                        $('.equations').append('<div class="row"><div class="input-group equation" style="margin: 3px;"><div class="input-group-prepend"><span class="input-group-text">Equation</span></div><input type="text" aria-label="premisse" class="form-control premisse" placeholder="Prémisse"><input type="text" aria-label="conclusion" class="form-control conclusion" placeholder="Conclusion"></div></div>');
                     }
-                    else {
-                        $('#successAlert').text(data.name).show();
-                        $('#errorAlert').hide();
-                    }
-
                 }
-            });
-
-            event.preventDefault();
-
-        });
-
+                else {
+                    for (var j = 0; j < (Math.abs(diff)); j++) {
+                        $('.equation').last().remove();
+                    }
+                }
+            }
+        })
     });
 
-    function alerter_test() {
-        alert("Hello");
+    function resolve() {
+        $('.premisse').attr('disabled', 'disabled');
+        $('.conclusion').attr('disabled', 'disabled');
+        $('#hypothese').attr('disabled', 'disabled');
+        $('#reset').attr('disabled', false);
+
+        $('.equation').each(function () {
+            var prem = $(this).find('.premisse').val();
+            var conc = $(this).find('.conclusion').val();
+            var myDic = {
+                'premisse': prem,
+                'conclusion': conc,
+            }
+            $.ajax({
+                type: "POST",
+                data: myDic,
+                url: '/create_eq'
+            })
+        })
+        var hyp = $('.hypothese').val();
+        var hypDic = {
+            'hypothese': hyp
+        }
+        $.ajax({
+            type: "POST",
+            data: hypDic,
+            url: '/create_hyp'
+        })
+        $.ajax({
+            type: "POST",
+            url: '/generate_solutions',
+            success: function (res) {
+                $('#solution').val(res)
+            }
+        })
+    }
+
+    function reset() {
+        $('.premisse').attr('disabled', false);
+        $('.conclusion').attr('disabled', false);
+        $('#hypothese').attr('disabled', false);
+        $('#reset').attr('disabled', 'disabled');
+        $('#solution').val("")
+
+        $.ajax({
+            type: "POST",
+            url: '/reset',
+        })
     }
 
 </script>
+
+

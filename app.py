@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
+from pythonObjects.main import *
 
 app = Flask(__name__)
 
@@ -6,18 +7,30 @@ app = Flask(__name__)
 def index():
 	return render_template('home.html')
 
-@app.route('/process', methods=['POST'])
-def process():
 
-	email = request.form['email']
-	name = request.form['name']
+@app.route('/create_eq', methods=['POST','GET'])
+def create_eq():
+    data = request.values
+    premisse, conclusion = data['premisse'], data['conclusion']
+    add_eq(premisse, conclusion)
+    return data
 
-	if name and email:
-		newName = name[::-1]
+@app.route('/create_hyp', methods=['POST','GET'])
+def create_hyp():
+    data = request.values
+    hypothese = data['hypothese']
+    add_hyp(hypothese)
+    return data
 
-		return jsonify({'name' : newName})
+@app.route('/generate_solutions', methods=['POST','GET'])
+def generate_solutions():
+    solution = get_solution()
+    return solution
 
-	return jsonify({'error' : 'Missing data!'})
+@app.route('/reset', methods=['POST','GET'])
+def reset():
+    reset_systeme()
+    return "ok"
 
 if __name__ == '__main__':
 	app.run(debug=True)
