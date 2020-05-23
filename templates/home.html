@@ -97,49 +97,14 @@
         })
     });
 
-    function ajax_eq(myDic){
-        $.ajax({
-                type: "POST",
-                async: false,
-                data: myDic,
-                url: '/create_eq'
-        })
-    }
-    function ajax_hyp(hypDic){
-        $.ajax({
-            type: "POST",
-            async: false,
-            data: hypDic,
-            url: '/create_hyp'
-        })
-    }
-    function ajax_sol(){
-        $.ajax({
-            type: "POST",
-            async: false,
-            url: '/generate_solutions',
-            success: function (res) {
-                $('#solution').val(res)
-            }
-        })
-    }
-    function ajax_reset(){
-        $.ajax({
-            type: "POST",
-            async: false,
-            url: '/reset',
-            complete: function (res) {
-                $('#launch').attr('disabled', false);
-            }
-        })
-    }
-
     function resolve() {
         $('.premisse').attr('disabled', 'disabled');
         $('.conclusion').attr('disabled', 'disabled');
         $('#hypothese').attr('disabled', 'disabled');
         $('#launch').attr('disabled','disabled');
         $('#reset').attr('disabled', false);
+        var mainDic = {};
+        var num_eq = 1
 
         $('.equation').each(function () {
             var prem = $(this).find('.premisse').val();
@@ -148,24 +113,34 @@
                 'premisse': prem,
                 'conclusion': conc,
             }
-            ajax_eq(myDic);
+            mainDic[num_eq]=myDic;
+            num_eq += 1;
         })
         var hyp = $('.hypothese').val();
         var hypDic = {
             'hypothese': hyp
         }
-        ajax_hyp(hypDic);
-        ajax_sol();
+        mainDic[0]=hypDic;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(mainDic),
+            url: '/solution',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            complete: function (res) {
+                var sol = res["responseText"];
+                $('#solution').val(sol);
+            }
+        })
     }
 
     function reset() {
         $('.premisse').attr('disabled', false);
         $('.conclusion').attr('disabled', false);
         $('#hypothese').attr('disabled', false);
+        $('#launch').attr('disabled', false);
         $('#reset').attr('disabled', 'disabled');
         $('#solution').val("")
-
-        ajax_reset();
     }
 
 </script>

@@ -2,30 +2,30 @@ from .hypothese import *
 from .systeme import *
 from .equation import *
 
-S = Systeme()
-H = Hypothese()
 
-def reset_systeme():
+def get_solution(myDic):
     S = Systeme()
     H = Hypothese()
 
-def add_eq(prem, conc):
-    premisse_list=[]
-    for i in prem:
-        if i.isalpha():
-            premisse_list.append(i)
-    conclusion_list = []
-    for j in conc:
-        if j.isalpha():
-            conclusion_list.append(j)
-    S.append_equation(Equation(premisse_list, conclusion_list))
-
-def add_hyp(hyp):
+    hyp = myDic['0']['hypothese']
     for i in hyp:
         if i.isalpha():
             H.append_fact(i)
 
-def get_solution():
+    indice = len(myDic)
+    for i in range(1, indice):
+        prem, conc = myDic[str(i)]['premisse'], myDic[str(i)]['conclusion']
+        premisse_list=[]
+        for i in prem:
+            if i.isalpha():
+                premisse_list.append(i)
+        conclusion_list = []
+        for j in conc:
+            if j.isalpha():
+                conclusion_list.append(j)
+        S.append_equation(Equation(premisse_list, conclusion_list))
+
+
     solution = []
     while H.facts:
         fait = H.first_item()
@@ -41,11 +41,4 @@ def get_solution():
             solution.append(fait)
         H.delete_first_item()
     return(str(solution))
-    
 
-def display():
-    for e in S.systeme:
-        print(e.premisse)
-        print(e.conclusion)
-    for f in H.facts:
-        print(f)
