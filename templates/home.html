@@ -98,11 +98,18 @@
     });
 
     function resolve() {
-        $('.premisse').attr('disabled', 'disabled');
-        $('.conclusion').attr('disabled', 'disabled');
-        $('#hypothese').attr('disabled', 'disabled');
         $('#launch').attr('disabled','disabled');
         $('#reset').attr('disabled', false);
+        $('.premisse').click(function (){
+            $('#launch').attr('disabled', false);
+        });
+        $('.conclusion').click(function (){
+            $('#launch').attr('disabled', false);
+        });
+        $('#hypothese').click(function (){
+            $('#launch').attr('disabled', false);
+        });
+        
         var mainDic = {};
         var num_eq = 1
 
@@ -135,12 +142,12 @@
     }
 
     function reset() {
-        $('.premisse').attr('disabled', false);
-        $('.conclusion').attr('disabled', false);
-        $('#hypothese').attr('disabled', false);
         $('#launch').attr('disabled', false);
         $('#reset').attr('disabled', 'disabled');
-        $('#solution').val("")
+        $('.premisse').val("");
+        $('.conclusion').val("");
+        $('#hypothese').val("");
+        $('#solution').val("");
     }
 
 </script>
