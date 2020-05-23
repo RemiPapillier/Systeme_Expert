@@ -14,21 +14,22 @@
 </head>
 
 <body>
-    <br><br>
+    <br>
     <div class="row">
         <div class="col">
-            <input id="inputeq" placeholder="1" class="form-control" style="text-align: center; width: 60%; margin: auto;" type="number" min="1" max="10">
+            <div class="label" style="text-align: center; margin:5px;">Combien d'équations avez vous dans le système?</div>
+            <input id="inputeq" placeholder="1" class="form-control" style="text-align: center; width: 40%; margin: auto;" type="number" min="1" max="10">
         </div>
     </div>
-    <br><br>
+    <br>
     <div class="container equations">
         <div class="row">
             <div class="input-group equation" style="margin: 3px;">
                 <div class="input-group-prepend">
                   <span class="input-group-text">Equation</span>
                 </div>
-                <input id="premisse" type="text" aria-label="premisse" class="form-control premisse" placeholder="Prémisse">
-                <input id="conclusion" type="text" aria-label="conclusion" class="form-control conclusion" placeholder="Conclusion">
+                <input id="premisse" type="text" aria-label="premisse" class="form-control premisse" style="text-align:center;" placeholder="Prémisse">
+                <input id="conclusion" type="text" aria-label="conclusion" class="form-control conclusion" style="text-align:center;" placeholder="Conclusion">
             </div>
         </div>
     </div>
@@ -38,13 +39,13 @@
             <div class="col">
                 <label for="hypothese">Hypothèses</label>
                 <div class="input-group">
-                    <input id="hypothese" type="text" class="form-control hypothese" placeholder="A,B,C">
+                    <input id="hypothese" type="text" class="form-control hypothese" style="text-align:center;" placeholder="Hypothèses">
                 </div>
             </div>
             <div class="col">
                 <label for="solution">Solutions</label>
                 <div class="input-group">
-                    <input id="solution" type="text" class="form-control">
+                    <input id="solution" type="text" style="text-align:center;" class="form-control">
                 </div>
             </div>
         </div>
@@ -84,7 +85,7 @@
             if (form.checkValidity()) {
                 if (diff < 0) {
                     for (var i = 0; i < (Math.abs(diff)); i++) {
-                        $('.equations').append('<div class="row"><div class="input-group equation" style="margin: 3px;"><div class="input-group-prepend"><span class="input-group-text">Equation</span></div><input type="text" aria-label="premisse" class="form-control premisse" placeholder="Prémisse"><input type="text" aria-label="conclusion" class="form-control conclusion" placeholder="Conclusion"></div></div>');
+                        $('.equations').append('<div class="row"><div class="input-group equation" style="margin: 3px;"><div class="input-group-prepend"><span class="input-group-text">Equation</span></div><input type="text" aria-label="premisse" class="form-control premisse" style="text-align:center;" placeholder="Prémisse"><input type="text" aria-label="conclusion" class="form-control conclusion" style="text-align:center;" placeholder="Conclusion"></div></div>');
                     }
                 }
                 else {
@@ -96,36 +97,23 @@
         })
     });
 
-    function resolve() {
-        $('.premisse').attr('disabled', 'disabled');
-        $('.conclusion').attr('disabled', 'disabled');
-        $('#hypothese').attr('disabled', 'disabled');
-        $('#reset').attr('disabled', false);
-
-        $('.equation').each(function () {
-            var prem = $(this).find('.premisse').val();
-            var conc = $(this).find('.conclusion').val();
-            var myDic = {
-                'premisse': prem,
-                'conclusion': conc,
-            }
-            $.ajax({
+    function ajax_eq(myDic){
+        $.ajax({
                 type: "POST",
                 async: false,
                 data: myDic,
                 url: '/create_eq'
-            })
         })
-        var hyp = $('.hypothese').val();
-        var hypDic = {
-            'hypothese': hyp
-        }
+    }
+    function ajax_hyp(hypDic){
         $.ajax({
             type: "POST",
             async: false,
             data: hypDic,
             url: '/create_hyp'
         })
+    }
+    function ajax_sol(){
         $.ajax({
             type: "POST",
             async: false,
@@ -135,19 +123,47 @@
             }
         })
     }
-
-    function reset() {
-        $('.premisse').attr('disabled', false);
-        $('.conclusion').attr('disabled', false);
-        $('#hypothese').attr('disabled', false);
-        $('#reset').attr('disabled', 'disabled');
-        $('#solution').val("")
-
+    function ajax_reset(){
         $.ajax({
             type: "POST",
             async: false,
             url: '/reset',
         })
+    }
+
+    function resolve() {
+        $('.premisse').attr('disabled', 'disabled');
+        $('.conclusion').attr('disabled', 'disabled');
+        $('#hypothese').attr('disabled', 'disabled');
+        $('#launch').attr('disabled','disabled');
+        $('#reset').attr('disabled', false);
+
+        $('.equation').each(function () {
+            var prem = $(this).find('.premisse').val();
+            var conc = $(this).find('.conclusion').val();
+            var myDic = {
+                'premisse': prem,
+                'conclusion': conc,
+            }
+            ajax_eq(myDic);
+        })
+        var hyp = $('.hypothese').val();
+        var hypDic = {
+            'hypothese': hyp
+        }
+        ajax_hyp(hypDic);
+        ajax_sol();
+    }
+
+    function reset() {
+        $('.premisse').attr('disabled', false);
+        $('.conclusion').attr('disabled', false);
+        $('#hypothese').attr('disabled', false);
+        $('#launch').attr('disabled', false);
+        $('#reset').attr('disabled', 'disabled');
+        $('#solution').val("")
+
+        ajax_reset();
     }
 
 </script>

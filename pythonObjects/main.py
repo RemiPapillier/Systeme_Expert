@@ -37,7 +37,8 @@ def get_solution():
                 for f in e.conclusion:
                     H.append_fact(f)
                 e.remove_conclusion()
-        solution.append(fait)
+        if(fait not in solution):
+            solution.append(fait)
         H.delete_first_item()
     return(str(solution))
     

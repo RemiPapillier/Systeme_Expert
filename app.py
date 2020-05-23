@@ -25,7 +25,12 @@ def create_hyp():
 @app.route('/generate_solutions', methods=['POST','GET'])
 def generate_solutions():
     solution = get_solution()
-    return solution
+    str_sol = "{ "
+    for i in solution:
+        if i.isalpha():
+            str_sol += str(i) + " "
+    str_sol += "}"
+    return str_sol
 
 @app.route('/reset', methods=['POST','GET'])
 def reset():
