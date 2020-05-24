@@ -12,6 +12,7 @@ def index():
 def solution():
     data = request.get_json()
     solution = get_solution(data)
+    #Creation d'un string contenant les solutions
     str_sol = "{ "
     for i in solution:
         if i.isalpha():
