@@ -25,7 +25,11 @@ def get_solution(myDic):
                 conclusion_list.append(j)
         S.append_equation(Equation(premisse_list, conclusion_list))
 
-
+    #tour d'algorithme pour éliminer les conclusions s'il n'y a pas de premisse
+    for e in S.systeme:
+        if(not e.premisse and e.conclusion):
+            e.remove_conclusion()
+            
     solution = []
     while H.facts:
         fait = H.first_item()

@@ -16,44 +16,69 @@
 <body>
     <br>
     <div class="row">
-        <div class="col">
-            <div class="label" style="text-align: center; margin:5px;">Combien d'équations avez vous dans le système?</div>
-            <input id="inputeq" placeholder="1" class="form-control" style="text-align: center; width: 40%; margin: auto;" type="number" min="1" max="10">
-        </div>
-    </div>
-    <br>
-    <div class="container equations">
-        <div class="row">
-            <div class="input-group equation" style="margin: 3px;">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Equation</span>
-                </div>
-                <input id="premisse" type="text" aria-label="premisse" class="form-control premisse" style="text-align:center;" placeholder="Prémisse">
-                <input id="conclusion" type="text" aria-label="conclusion" class="form-control conclusion" style="text-align:center;" placeholder="Conclusion">
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <br>
-        <div class="row">
-            <div class="col">
-                <label for="hypothese">Hypothèses</label>
-                <div class="input-group">
-                    <input id="hypothese" type="text" class="form-control hypothese" style="text-align:center;" placeholder="Hypothèses">
-                </div>
-            </div>
-            <div class="col">
-                <label for="solution">Solutions</label>
-                <div class="input-group">
-                    <input id="solution" type="text" style="text-align:center;" class="form-control">
+        <div class="col-3" style="padding:15px; margin-left: 15px">
+            <div class="container text-dark" style="background-color:#e9ecef; border: 1px solid #ced4da; border-radius: 20px; width: 100%;">
+                <div class="title" style="text-align: center; padding: 10px; font-size: 1.3rem; color: #495057;">Système Expert</div>
+                <ul style="padding-left:30px;">
+                    <li>Entrer le nombre d'équations du système</li>
+                    <li>Remplir la prémisse et la conclusion de chaque équation avec des faits</li>
+                    <li>Ajouter les faits à l'hypothèse</li>
+                    <li>Appuyer sur Start pour récupérer la solution</li>
+                </ul>
+                <div class="text-primary" style="text-align: center; padding-bottom: 10px;">
+                    Les faits sont symbolisés par des lettres avec des séparateurs au choix
                 </div>
             </div>
         </div>
-        <br>
-        <div class="row">
-            <div class="col">
-                <button id="launch" onclick="resolve()" type="button" class="btn btn-secondary">Start</button>
-                <button id="reset" onclick="reset()" type="button" class="btn btn-secondary">Reset</button>
+        <div class="col" style="padding:15px; margin-right: 15px;">
+            <div class="row">
+                <div class="col">
+                    <div class="label" style="color:#495057; text-align: center; margin:5px;">Nombre d'équations dans le
+                        système</div>
+                    <input id="inputeq" placeholder="1" class="form-control"
+                        style="text-align: center; width: 40%; margin: auto;" type="number" min="1" max="10">
+                </div>
+            </div>
+            <br>
+            <div class="container equations">
+                <div class="row">
+                    <div class="input-group equation" style="margin: 3px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Equation</span>
+                        </div>
+                        <input id="premisse" type="text" aria-label="premisse" class="form-control premisse"
+                            style="text-align:center;" placeholder="Prémisse" required>
+                        <input id="conclusion" type="text" aria-label="conclusion" class="form-control conclusion"
+                            style="text-align:center;" placeholder="Conclusion" required>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <br>
+                <div class="row">
+                    <div class="col text-center">
+                        <label for="hypothese" style="color: #495057;">Hypothèses</label>
+                        <div class="input-group">
+                            <input id="hypothese" type="text" class="form-control hypothese" style="text-align:center;" required>
+                        </div>
+                    </div>
+                    <div class="col text-center">
+                        <label for="solution" style="color: #495057;">Solutions</label>
+                        <div class="input-group">
+                            <input id="solution" type="text" style="text-align:center;" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col" style="text-align: center;">
+                        <button id="launch" onclick="resolve()" type="button" class="btn btn-secondary">Start</button>
+                        <button id="reset" onclick="reset()" type="button" class="btn btn-secondary">Reset</button>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,8 +96,6 @@
 <script>
 
     $(document).ready(function () {
-        $('#solution').attr('disabled', 'disabled');
-        $('#reset').attr('disabled', 'disabled');
 
         $('#inputeq').change(function () {
             var form = document.getElementById("inputeq");
@@ -109,7 +132,10 @@
         $('#hypothese').click(function (){
             $('#launch').attr('disabled', false);
         });
-        
+        $('#inputeq').click(function (){
+            $('#launch').attr('disabled', false);
+        });
+
         var mainDic = {};
         var num_eq = 1
 
@@ -143,7 +169,6 @@
 
     function reset() {
         $('#launch').attr('disabled', false);
-        $('#reset').attr('disabled', 'disabled');
         $('.premisse').val("");
         $('.conclusion').val("");
         $('#hypothese').val("");
